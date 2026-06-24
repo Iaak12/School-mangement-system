@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 239 70% 55%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 239 70% 55%;
+    --radius: 0.75rem;
+    --sidebar-width: 260px;
+    --header-height: 64px;
+  }
+
+  .dark {
+    --background: 222 47% 8%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 239 70% 65%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 239 70% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+}
+
+@layer components {
+  /* Sidebar */
+  .sidebar {
+    width: var(--sidebar-width);
+    @apply fixed inset-y-0 left-0 z-50 flex flex-col bg-card border-r border-border transition-transform duration-300;
+  }
+  .sidebar-collapsed {
+    @apply -translate-x-full lg:translate-x-0 lg:w-16;
+  }
+
+  /* Page layout */
+  .main-content {
+    margin-left: var(--sidebar-width);
+    margin-top: var(--header-height);
+    @apply min-h-screen transition-all duration-300;
+  }
+
+  /* Stat cards */
+  .stat-card {
+    @apply relative overflow-hidden rounded-xl p-6 border border-border bg-card shadow-sm 
+           hover:shadow-md transition-all duration-200 hover:-translate-y-0.5;
+  }
+  .stat-card-icon {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center text-white text-2xl;
+  }
+
+  /* Page header */
+  .page-header {
+    @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6;
+  }
+  .page-title {
+    @apply text-2xl font-bold text-foreground;
+  }
+  .page-subtitle {
+    @apply text-sm text-muted-foreground mt-1;
+  }
+
+  /* Data table */
+  .data-table-wrapper {
+    @apply rounded-xl border border-border bg-card shadow-sm overflow-hidden;
+  }
+
+  /* Status badges */
+  .badge-active   { @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400; }
+  .badge-inactive { @apply bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400; }
+  .badge-pending  { @apply bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400; }
+  .badge-paid     { @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400; }
+  .badge-overdue  { @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400; }
+  .badge-absent   { @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400; }
+  .badge-present  { @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400; }
+  .badge-late     { @apply bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400; }
+
+  /* Glassmorphism card */
+  .glass-card {
+    @apply backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border border-white/20 dark:border-gray-700/30 rounded-xl shadow-xl;
+  }
+
+  /* Gradient backgrounds */
+  .gradient-primary  { background: linear-gradient(135deg, hsl(239,70%,55%) 0%, hsl(265,70%,60%) 100%); }
+  .gradient-success  { background: linear-gradient(135deg, hsl(142,71%,45%) 0%, hsl(162,63%,41%) 100%); }
+  .gradient-warning  { background: linear-gradient(135deg, hsl(38,92%,50%) 0%, hsl(25,95%,53%) 100%); }
+  .gradient-danger   { background: linear-gradient(135deg, hsl(0,84%,60%) 0%, hsl(350,89%,60%) 100%); }
+  .gradient-info     { background: linear-gradient(135deg, hsl(199,89%,48%) 0%, hsl(217,91%,60%) 100%); }
+  .gradient-purple   { background: linear-gradient(135deg, hsl(270,70%,55%) 0%, hsl(300,65%,55%) 100%); }
+
+  /* Loading skeleton */
+  .skeleton {
+    @apply animate-pulse bg-muted rounded;
+  }
+
+  /* Nav item */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground 
+           hover:text-foreground hover:bg-accent transition-all duration-150 cursor-pointer;
+  }
+  .nav-item.active {
+    @apply text-primary bg-primary/10 font-semibold;
+  }
+
+  /* Chart container */
+  .chart-card {
+    @apply rounded-xl border border-border bg-card p-6 shadow-sm;
+  }
+
+  /* Form group */
+  .form-group {
+    @apply space-y-2;
+  }
+  .form-label {
+    @apply text-sm font-medium text-foreground;
+  }
+  .form-error {
+    @apply text-xs text-destructive mt-1;
+  }
+
+  /* Mobile responsive sidebar overlay */
+  .sidebar-overlay {
+    @apply fixed inset-0 bg-black/50 z-40 lg:hidden;
+  }
+}
+
+/* Recharts custom styles */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  @apply !bg-card !border-border !shadow-lg !rounded-lg;
+}
+
+/* Print styles */
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+}

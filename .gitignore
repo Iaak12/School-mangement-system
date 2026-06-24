@@ -1,0 +1,26 @@
+# Root-level monorepo .gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Root node_modules (concurrently etc.)
+node_modules/
+npm-debug.log*
+
+# Environment (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# Generated data / runtime
+data/
+*.log

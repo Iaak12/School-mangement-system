@@ -99,6 +99,30 @@ app.get('/', (req, res) => {
 // Favicon route to prevent 404 errors
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
+app.get('/api/create-admin', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    let admin = await User.findOne({ email: 'admin@springfield.edu' });
+    if (!admin) {
+      admin = await User.create({
+        name: 'Admin User',
+        email: 'admin@springfield.edu',
+        password: 'Admin@1234',
+        role: 'admin',
+        phone: '+91-9000000001'
+      });
+      res.json({ message: 'Admin created', admin });
+    } else {
+      admin.password = 'Admin@1234';
+      admin.role = 'admin';
+      await admin.save();
+      res.json({ message: 'Admin updated', admin });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 404
 app.use(notFound);
 

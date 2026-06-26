@@ -14,7 +14,8 @@ const useSocket = () => {
     if (!isAuthenticated || !accessToken) return;
 
     if (!socketInstance) {
-      socketInstance = io('/', {
+      const socketUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') : '/';
+      socketInstance = io(socketUrl, {
         auth: { token: accessToken },
         transports: ['websocket'],
         reconnection: true,

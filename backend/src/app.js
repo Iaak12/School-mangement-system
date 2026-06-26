@@ -91,6 +91,14 @@ app.use('/api/timetable', timetableRoutes);
 app.use('/api/hr', hrRoutes);
 app.use('/api/documents', documentRoutes);
 
+// Root route to prevent 404 on Render ping
+app.get('/', (req, res) => {
+  res.status(200).send('School ERP API is running.');
+});
+
+// Favicon route to prevent 404 errors
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // 404
 app.use(notFound);
 

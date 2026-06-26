@@ -4,9 +4,15 @@ const logger = require('../utils/logger');
 const User = require('../models/User');
 
 const setupSocket = (server) => {
+  const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    'http://localhost:5173',
+    'https://school-mangement-system-ten.vercel.app'
+  ].filter(Boolean);
+
   const io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+      origin: allowedOrigins,
       credentials: true,
     },
   });

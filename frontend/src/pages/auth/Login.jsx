@@ -34,13 +34,43 @@ const Login = () => {
 
   const onSubmit = (data) => loginMutation.mutate(data);
 
-  const demoCredentials = [
-    { role: 'Admin', email: 'admin@springfield.edu', pass: 'Admin@1234' },
-    { role: 'Principal', email: 'principal@springfield.edu', pass: 'Principal@1234' },
-    { role: 'Teacher', email: 'anita@springfield.edu', pass: 'Teacher@1234' },
-    { role: 'Student', email: 'student1@springfield.edu', pass: 'Student@1234' },
-    { role: 'Parent', email: 'parent1@springfield.edu', pass: 'Parent@1234' },
-  ];
+const demoCredentials = [
+  {
+    role: "Admin",
+    email: "admin@springfield.edu",
+    pass: "Admin@1234",
+  },
+  {
+    role: "Principal",
+    email: "principal@springfield.edu",
+    pass: "Principal@1234",
+  },
+  {
+    role: "Accountant",
+    email: "accountant@springfield.edu",
+    pass: "Account@1234",
+  },
+  {
+    role: "Librarian",
+    email: "librarian@springfield.edu",
+    pass: "Library@1234",
+  },
+  {
+    role: "Teacher",
+    email: "anita@springfield.edu",
+    pass: "Teacher@1234",
+  },
+  {
+    role: "Student",
+    email: "student1@springfield.edu",
+    pass: "Student@1234",
+  },
+  {
+    role: "Parent",
+    email: "parent1@springfield.edu",
+    pass: "Parent@1234",
+  },
+];
 
   return (
     <div className="min-h-screen flex bg-background">

@@ -15,8 +15,29 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 
 // App Pages
 import Dashboard from './pages/dashboard/Dashboard';
+
+// Students
 import StudentsPage from './pages/students/StudentsPage';
+import StudentFormPage from './pages/students/StudentFormPage'; // Reusable for Create & Edit
+
+// Teachers
 import TeachersPage from './pages/teachers/TeachersPage';
+import TeacherFormPage from './pages/teachers/TeacherFormPage'; // Reusable for Create & Edit
+
+// Parents
+import ParentsPage from './pages/parents/ParentsPage';
+import ParentFormPage from './pages/parents/ParentFormPage'; // Reusable for Create & Edit
+
+// Classes
+import ClassesPage from './pages/classes/ClassesPage';
+import ClassFormPage from './pages/classes/ClassFormPage'; // Reusable for Create & Edit
+
+// Documents
+import DocumentsPage from './pages/documents/DocumentsPage';
+import UploadDocumentPage from './pages/documents/UploadDocumentPage';
+import DocumentDetailPage from './pages/documents/DocumentDetailPage'; // Fixed import pointing away from DocumentsPage
+
+// Other Management Pages
 import AttendancePage from './pages/attendance/AttendancePage';
 import FeesPage from './pages/fees/FeesPage';
 import ExamsPage from './pages/exams/ExamsPage';
@@ -29,7 +50,7 @@ import TransportPage from './pages/transport/TransportPage';
 import HRPage from './pages/hr/HRPage';
 import SettingsPage from './pages/settings/SettingsPage';
 
-// 404 & Unauthorized
+// 404 & Unauthorized Fallback Screens
 const NotFound = () => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-background">
     <div className="text-center animate-fade-in">
@@ -58,7 +79,8 @@ const Unauthorized = () => (
 
 const AuthRedirect = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
-  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
+  const replacePath = isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
+  return replacePath;
 };
 
 const App = () => {
@@ -71,14 +93,41 @@ const App = () => {
           <Route path="/forgot-password" element={<AuthRedirect><ForgotPassword /></AuthRedirect>} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* Protected App Routes */}
+          {/* Protected App Routes Layout Shell */}
           <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
 
+            {/* ─── Students Route Group ─────────────────────────── */}
             <Route path="/students" element={<StudentsPage />} />
-            <Route path="/teachers" element={<TeachersPage />} />
+            <Route path="/students/new" element={<StudentFormPage />} />
+            <Route path="/students/:id" element={<StudentFormPage />} />
+            <Route path="/students/:id/edit" element={<StudentFormPage />} />
 
+            {/* ─── Teachers Route Group ─────────────────────────── */}
+            <Route path="/teachers" element={<TeachersPage />} />
+            <Route path="/teachers/new" element={<TeacherFormPage />} />
+            <Route path="/teachers/:id" element={<TeacherFormPage />} />
+            <Route path="/teachers/:id/edit" element={<TeacherFormPage />} />
+
+            {/* ─── Parents Route Group ──────────────────────────── */}
+            <Route path="/parents" element={<ParentsPage />} />
+            <Route path="/parents/new" element={<ParentFormPage />} />
+            <Route path="/parents/:id" element={<ParentFormPage />} />
+            <Route path="/parents/:id/edit" element={<ParentFormPage />} />
+
+            {/* ─── Classes Route Group ──────────────────────────── */}
+            <Route path="/classes" element={<ClassesPage />} />
+            <Route path="/classes/new" element={<ClassFormPage />} />
+            <Route path="/classes/:id" element={<ClassFormPage />} />
+            <Route path="/classes/:id/edit" element={<ClassFormPage />} />
+
+            {/* ─── Documents Route Group ────────────────────────── */}
+            <Route path="/documents" element={<DocumentsPage />} />
+            <Route path="/documents/new" element={<UploadDocumentPage />} />
+            <Route path="/documents/:id" element={<DocumentDetailPage />} />
+
+            {/* Standard Dashboard Function Modules */}
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/fees" element={<FeesPage />} />
             <Route path="/exams" element={<ExamsPage />} />
@@ -87,20 +136,23 @@ const App = () => {
             <Route path="/notices" element={<NoticeBoardPage />} />
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/library" element={<LibraryPage />} />
+            
             <Route path="/transport" element={
               <ProtectedRoute roles={['admin', 'principal', 'teacher', 'student', 'parent']}>
                 <TransportPage />
               </ProtectedRoute>
             } />
+            
             <Route path="/hr" element={
               <ProtectedRoute roles={['admin', 'principal', 'accountant']}>
                 <HRPage />
               </ProtectedRoute>
             } />
+            
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
 
-          {/* 404 */}
+          {/* Global Fallback 404 handler */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -52,7 +52,7 @@ const login = asyncHandler(async (req, res) => {
 
 // POST /api/auth/logout
 const logout = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.body || req.cookies;
+  const refreshToken = req.body?.refreshToken || req.cookies?.refreshToken;
   if (req.user) {
     await User.findByIdAndUpdate(req.user._id, {
       $pull: { refreshTokens: { token: refreshToken } },

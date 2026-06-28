@@ -10,10 +10,12 @@ const ClassFormPage = () => {
   const queryClient = useQueryClient();
   const isEditMode = Boolean(id);
 
+  // Added academicYear field initialization
   const [formData, setFormData] = useState({
     name: '',
     section: '',
     classTeacherId: '',
+    academicYear: new Date().getFullYear().toString(), // Defaults to current year (e.g., "2026")
     status: 'active'
   });
   const [error, setError] = useState('');
@@ -22,7 +24,7 @@ const ClassFormPage = () => {
   const { data: teachers } = useQuery({
     queryKey: ['teachers', { limit: 200 }],
     queryFn: () => teachersAPI.list({ limit: 200 }),
-    select: (res) => res.data.data.teachers || []
+    select: (res) => res?.data?.data?.teachers || []
   });
 
   // Re-fetch individual parameters fallback details if checking active configurations edit
@@ -30,7 +32,7 @@ const ClassFormPage = () => {
     queryKey: ['class', id],
     queryFn: () => classesAPI.list({ id }),
     enabled: isEditMode,
-    select: (res) => res.data.data.classes?.find(c => c._id === id) || res.data.data
+    select: (res) => res?.data?.data?.classes?.find(c => c._id === id) || res?.data?.data
   });
 
   useEffect(() => {
@@ -39,6 +41,7 @@ const ClassFormPage = () => {
         name: currentClass.name || '',
         section: currentClass.section || '',
         classTeacherId: currentClass.classTeacher?._id || currentClass.classTeacher || '',
+        academicYear: currentClass.academicYear || new Date().getFullYear().toString(), // Hydrate from DB record
         status: currentClass.status || 'active'
       });
     }
@@ -61,6 +64,10 @@ const ClassFormPage = () => {
       setError('Core Class descriptor identity name is required.');
       return;
     }
+    if (!formData.academicYear) {
+      setError('Academic Year parameter is strictly required.');
+      return;
+    }
     submitMutation.mutate(formData);
   };
 
@@ -80,13 +87,26 @@ const ClassFormPage = () => {
         {error && <div className="text-xs p-3 rounded-lg bg-red-50 text-red-600 font-medium">{error}</div>}
 
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-foreground">Class Block Identifier Name</label>
+          <label className="text-xs font-semibold text-foreground">Class Block Identifier Name *</label>
           <input type="text" className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30" placeholder="e.g. Grade 10, Batch A" value={formData.name} onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))} required />
         </div>
 
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-foreground">Section Identifier Sub-tag</label>
           <input type="text" className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30" placeholder="e.g. B, Alpha (Optional)" value={formData.section} onChange={(e) => setFormData(p => ({ ...p, section: e.target.value }))} />
+        </div>
+
+        {/* Added Academic Year Input Layout Field */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-semibold text-foreground">Academic Year *</label>
+          <input 
+            type="text" 
+            className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30" 
+            placeholder="e.g. 2025-2026 or 2026" 
+            value={formData.academicYear} 
+            onChange={(e) => setFormData(p => ({ ...p, academicYear: e.target.value }))} 
+            required 
+          />
         </div>
 
         <div className="space-y-1.5">

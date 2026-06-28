@@ -35,7 +35,7 @@ const protect = asyncHandler(async (req, res, next) => {
 });
 
 const refreshTokenHandler = asyncHandler(async (req, res, next) => {
-  const { refreshToken } = req.body || req.cookies;
+  const refreshToken = req.body?.refreshToken || req.cookies?.refreshToken;
   if (!refreshToken) throw new ApiError(401, 'Refresh token required.');
 
   try {

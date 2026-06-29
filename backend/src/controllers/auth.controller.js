@@ -12,8 +12,8 @@ const { sendEmail } = require('../services/email.service');
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict',
+  secure: true,
+  sameSite: 'none',
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 

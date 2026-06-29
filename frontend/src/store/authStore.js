@@ -26,7 +26,7 @@ const useAuthStore = create(
     }),
     {
       name: 'school-erp-auth',
-      partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
+      partialize: (state) => ({ user: state.user, accessToken: state.accessToken, isAuthenticated: state.isAuthenticated }),
     }
   )
 );

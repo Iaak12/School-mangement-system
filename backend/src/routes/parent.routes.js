@@ -30,7 +30,7 @@ router.get(
     return res.status(200).json(
       new ApiResponse(200, {
         parents,
-        pagination: { total, page: Number(page) },
+        pagination: { total, page: Number(page), limit: Number(limit), pages: Math.ceil(total / limit) },
       }),
     );
   }),

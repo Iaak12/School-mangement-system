@@ -142,9 +142,11 @@ const TeacherFormPage = () => {
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-foreground">Employment Status</label>
           <select className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30" value={formData.status} onChange={(e) => setFormData(p => ({ ...p, status: e.target.value }))}>
-            <option value="active">Active/On-Duty</option>
-            <option value="inactive">On-Leave</option>
-            <option value="terminated">Terminated</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="on-leave">On Leave</option>
+            <option value="resigned">Resigned</option>
+            <option value="retired">Retired</option>
           </select>
         </div>
 

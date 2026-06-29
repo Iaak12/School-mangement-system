@@ -18,7 +18,7 @@ const ParentFormPage = () => {
     phone: '',
     relation: 'father', 
     occupation: '', 
-    status: 'active'
+    isActive: true
   });
   const [error, setError] = useState('');
 
@@ -40,7 +40,7 @@ const ParentFormPage = () => {
         phone: existingParent.phone || '',
         relation: existingParent.relation || 'father',
         occupation: existingParent.occupation || '', 
-        status: existingParent.status || 'active',
+        isActive: existingParent.isActive !== false,
       });
     }
   }, [existingParent]);
@@ -185,17 +185,18 @@ const ParentFormPage = () => {
           />
         </div>
 
-        {/* Profile Status Field */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-foreground">Status</label>
-          <select 
-            className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30" 
-            value={formData.status} 
-            onChange={(e) => setFormData(p => ({ ...p, status: e.target.value }))}
-          >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
+        {/* Active Status Toggle */}
+        <div className="flex items-center gap-3">
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={formData.isActive}
+              onChange={(e) => setFormData(p => ({ ...p, isActive: e.target.checked }))}
+              className="sr-only peer"
+            />
+            <div className="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+          </label>
+          <span className="text-sm text-foreground">Active</span>
         </div>
 
         {/* Control Actions buttons */}

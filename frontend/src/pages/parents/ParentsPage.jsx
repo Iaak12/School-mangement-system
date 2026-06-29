@@ -27,7 +27,8 @@ const ParentsPage = () => {
   });
 
   const parents = data?.parents || [];
-  const pagination = data?.pagination || {};
+  const rawPagination = data?.pagination || {};
+  const pagination = { ...rawPagination, pages: rawPagination.total ? Math.ceil(rawPagination.total / (params.limit || 20)) : 1 };
 
   return (
     <div className="space-y-6">
@@ -99,8 +100,8 @@ const ParentsPage = () => {
                 )}
               </div>
               
-              <span className={cn('mt-3 text-xs px-2.5 py-1 rounded-full font-medium capitalize', getStatusColor(parent.status))}>
-                {parent.status}
+              <span className={cn('mt-3 text-xs px-2.5 py-1 rounded-full font-medium', parent.isActive !== false ? 'badge-active' : 'badge-inactive')}>
+                {parent.isActive !== false ? 'Active' : 'Inactive'}
               </span>
             </div>
 

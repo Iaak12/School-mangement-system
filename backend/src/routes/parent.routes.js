@@ -82,10 +82,31 @@ router.put(
   "/:id",
   authorize("admin", "principal"),
   asyncHandler(async (req, res) => {
-    const parent = await Parent.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const parent = await Parent.findById(req.params.id);
     if (!parent) throw new ApiError(404, "Parent not found.");
+
+    Object.assign(parent, req.body);
+    await parent.save();
+
+    // Sync updates to corresponding User model
+    const userUpdates = {};
+    if (req.body.firstName || req.body.lastName) {
+      userUpdates.name = `${req.body.firstName || parent.firstName} ${req.body.lastName || parent.lastName}`;
+    }
+    if (req.body.email) {
+      userUpdates.email = req.body.email;
+    }
+    if (req.body.phone) {
+      userUpdates.phone = req.body.phone;
+    }
+    if (req.body.isActive !== undefined) {
+      userUpdates.isActive = req.body.isActive;
+    }
+
+    if (Object.keys(userUpdates).length > 0 && parent.user) {
+      await User.findByIdAndUpdate(parent.user, userUpdates, { runValidators: true });
+    }
+
     return res
       .status(200)
       .json(new ApiResponse(200, parent, "Parent updated."));

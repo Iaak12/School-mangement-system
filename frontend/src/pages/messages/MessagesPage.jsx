@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Send, Search, Circle, MessageSquare, Paperclip, ArrowLeft } from 'lucide-react';
@@ -35,8 +36,13 @@ const MessagesPage = () => {
     queryFn: () => messagesAPI.getMessages(selectedUser._id),
     select: (r) => r.data.data,
     enabled: !!selectedUser,
-    onSuccess: (data) => setMessages(data.messages || []),
   });
+
+  useEffect(() => {
+    if (msgData) {
+      setMessages(msgData.messages || []);
+    }
+  }, [msgData]);
 
   const sendMutation = useMutation({
     mutationFn: (data) => messagesAPI.send(data),

@@ -63,8 +63,31 @@ const createTeacher = asyncHandler(async (req, res) => {
 });
 
 const updateTeacher = asyncHandler(async (req, res) => {
-  const teacher = await Teacher.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+  const teacher = await Teacher.findById(req.params.id);
   if (!teacher) throw new ApiError(404, 'Teacher not found.');
+
+  Object.assign(teacher, req.body);
+  await teacher.save();
+
+  // Sync updates to corresponding User model
+  const userUpdates = {};
+  if (req.body.firstName || req.body.lastName) {
+    userUpdates.name = `${req.body.firstName || teacher.firstName} ${req.body.lastName || teacher.lastName}`;
+  }
+  if (req.body.email) {
+    userUpdates.email = req.body.email;
+  }
+  if (req.body.phone) {
+    userUpdates.phone = req.body.phone;
+  }
+  if (req.body.status) {
+    userUpdates.isActive = req.body.status === 'active';
+  }
+
+  if (Object.keys(userUpdates).length > 0 && teacher.user) {
+    await User.findByIdAndUpdate(teacher.user, userUpdates, { runValidators: true });
+  }
+
   return res.status(200).json(new ApiResponse(200, teacher, 'Teacher updated.'));
 });
 

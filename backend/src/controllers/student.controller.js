@@ -88,15 +88,36 @@ const createStudent = asyncHandler(async (req, res) => {
 
 // PUT /api/students/:id
 const updateStudent = asyncHandler(async (req, res) => {
-  const student = await Student.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  })
+  const student = await Student.findById(req.params.id);
+  if (!student) throw new ApiError(404, 'Student not found.');
+
+  Object.assign(student, req.body);
+  await student.save();
+
+  // Sync updates to corresponding User model
+  const userUpdates = {};
+  if (req.body.firstName || req.body.lastName) {
+    userUpdates.name = `${req.body.firstName || student.firstName} ${req.body.lastName || student.lastName}`;
+  }
+  if (req.body.email) {
+    userUpdates.email = req.body.email;
+  }
+  if (req.body.phone) {
+    userUpdates.phone = req.body.phone;
+  }
+  if (req.body.status) {
+    userUpdates.isActive = req.body.status === 'active';
+  }
+
+  if (Object.keys(userUpdates).length > 0 && student.user) {
+    await User.findByIdAndUpdate(student.user, userUpdates, { runValidators: true });
+  }
+
+  const populated = await Student.findById(student._id)
     .populate('class', 'name')
     .populate('section', 'name');
 
-  if (!student) throw new ApiError(404, 'Student not found.');
-  return res.status(200).json(new ApiResponse(200, student, 'Student updated.'));
+  return res.status(200).json(new ApiResponse(200, populated, 'Student updated.'));
 });
 
 // DELETE /api/students/:id

@@ -33,18 +33,21 @@ const AttendancePage = () => {
     queryFn: () => attendanceAPI.get({ date: selectedDate, classId: selectedClass, sectionId: selectedSection }),
     select: (r) => r.data.data,
     enabled: !!selectedClass && !!selectedSection,
-    onSuccess: (data) => {
-      if (data?.attendance) {
+  });
+
+  React.useEffect(() => {
+    if (attData) {
+      if (attData.attendance) {
         const map = {};
-        data.attendance.records.forEach((r) => { map[r.student._id] = r.status; });
+        attData.attendance.records.forEach((r) => { map[r.student._id] = r.status; });
         setRecords(map);
-      } else if (data?.students) {
+      } else if (attData.students) {
         const map = {};
-        data.students.forEach((s) => { map[s._id] = 'present'; });
+        attData.students.forEach((s) => { map[s._id] = 'present'; });
         setRecords(map);
       }
-    },
-  });
+    }
+  }, [attData]);
 
   const saveMutation = useMutation({
     mutationFn: (data) => attendanceAPI.mark(data),

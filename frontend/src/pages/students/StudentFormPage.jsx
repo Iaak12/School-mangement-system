@@ -13,6 +13,7 @@ const StudentFormPage = () => {
   const [formData, setFormData] = useState({
     admissionNumber: '', // Optional: Controller auto-generates if empty string
     email: '',           // CRITICAL: Required for user generation
+    password: '',        // Optional login password
     rollNumber: '',
     firstName: '',
     lastName: '',
@@ -77,6 +78,7 @@ const StudentFormPage = () => {
       const backendPayload = {
         admissionNumber: data.admissionNumber.trim() || undefined, // undefined drops key so controller auto-generates string
         email: data.email, // Sent on root level for destructuring block
+        password: data.password || undefined, // Optional login password
         rollNumber: data.rollNumber,
         firstName: data.firstName,
         lastName: data.lastName,
@@ -138,16 +140,28 @@ const StudentFormPage = () => {
 
         {/* Account Login Email Block */}
         {!isEditMode && (
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Login / Portal Email Address *</label>
-            <input
-              type="email"
-              className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30"
-              value={formData.email}
-              onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))}
-              placeholder="name@school.com"
-              required
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-foreground">Login / Portal Email Address *</label>
+              <input
+                type="email"
+                className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30"
+                value={formData.email}
+                onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))}
+                placeholder="name@school.com"
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-foreground">Portal Password (Optional)</label>
+              <input
+                type="password"
+                className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30"
+                value={formData.password}
+                onChange={(e) => setFormData(p => ({ ...p, password: e.target.value }))}
+                placeholder={`Default: Student@${new Date().getFullYear()}`}
+              />
+            </div>
           </div>
         )}
 
